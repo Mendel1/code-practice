@@ -1,6 +1,3 @@
-// Tester.cpp : 定义控制台应用程序的入口点。
-//
-
 #include "stdafx.h"
 /*
 test.c
@@ -13,6 +10,8 @@ author:mendel
 //////////////////////////////////////////////
 /*Problem11*/
 #define MAXSIZE 20
+/*Problem 18*/
+#define ROW 15
 //////////////////////////////////////////////
 float Sqrt(float x)
 {
@@ -448,7 +447,6 @@ void test12()
 	}
 	printf("%d\n", sum);
 }
-
 void Problem11()
 {
 	int i, j,tmp,max;
@@ -484,5 +482,11 @@ void Problem11()
 }
 void Problem18()
 {
+	int i, j;
+	int tower[ROW][ROW] = { 0 };
+	int maxSum[ROW];
+	for (i = 0; i < ROW; i++)
+		for (j = 0; j <= i; j++)
+			scanf("%d", &tower[i][j]);
 
 }

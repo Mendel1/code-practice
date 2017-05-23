@@ -8,4 +8,4 @@ Tips:
 #Some function is not written in this format before.
 #Some function has several version because I tried to improve it by trying diffrent way.
 
-Some problem I think it make sense for me are introduced in my blog:http://mende.ml/
+Some problem I think it make sense for me are introduced in my blog:[Mendel](http://mende.ml/)
