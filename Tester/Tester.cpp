@@ -5,6 +5,8 @@ author:mendel
 */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <cstring>
 #include <math.h>
 #include <time.h>
 //////////////////////////////////////////////
@@ -25,10 +27,14 @@ float Sqrt(float x)
 int isprime(int n)
 {
 	int i;
-	for (i = 2; i < sqrt(n); i++)
+	for (i = 2; i <= sqrt(n); i++)
 		if (n%i == 0)
 			return 0;
 	return 1;
+}
+int max(int a, int b)
+{
+	return a > b ? a : b;
 }
 void test1()
 {
@@ -227,13 +233,27 @@ void test10();
 void test11();
 void test12();
 void Problem11();
-void Problem18();
+int Problem18();
+int Problem19();
+int Problem20();
+int Problem21();
+int Problem22();
+int Problem23();
+int Problem24();
+int Problem25();
+int Problem26();
+int Problem27();
+int Problem28();
+int Problem29();
+int Problem30();
+int Problem31();
+int Problem32();
 ///////////////////////////////////////////
 int main()
 {
-	int begin = clock();
+	
 	//fastFactors();
-	Problem18();
+	int begin=Problem32();
 	printf("Excute time: %d ms\n",clock()-begin);
 	return 0;
 }
@@ -390,7 +410,7 @@ void mul(int* num, int n)
 {
 	int rest, tmp,i;
 	rest = 0;
-	for ( i = 0;i < 400; i++)
+	for ( i = 0;i < 200; i++)
 	{
 		tmp = num[i] * n + rest;
 		num[i] = tmp % 10;
@@ -480,13 +500,534 @@ void Problem11()
 		}
 	printf("%d", max);
 }
-void Problem18()
+int Problem18()
 {
-	int i, j;
+	int i, j,begin;
 	int tower[ROW][ROW] = { 0 };
-	int maxSum[ROW];
+	int *maxSum;
 	for (i = 0; i < ROW; i++)
 		for (j = 0; j <= i; j++)
 			scanf("%d", &tower[i][j]);
-
+	printf("Success to reading.\n");
+	begin = clock();
+	maxSum = tower[ROW-1];
+	for (i = ROW - 2; i >= 0; i--)
+	{
+		for (j = 0; j <= i; j++)
+		{
+			maxSum[j] =( max(maxSum[j], maxSum[j + 1]) + tower[i][j]);
+			printf("%d ", maxSum[j]);
+		}
+		printf("\n");
+	}
+	printf("%d\n", maxSum[0]);
+	return begin;
 }
+int SundayBegin(int year,int* days)
+{
+	int i, sum;
+	int month[12] = { 31,28,31,30,31,30,31,31,30,31,30,31};
+	sum = 0;
+	if (year % 400 == 0)
+		month[1]++;
+	else if ((year % 100) &&( year % 4 == 0))
+		month[1]++;
+	for (i = 0; i < 12; i++)
+	{
+		if ((*days + 1) % 7 == 0)
+		{
+			sum++;
+			printf("It's %4d-%02d-01\n", year, i + 1);
+		}
+		*days += month[i];
+	}
+	return sum;
+}
+int Problem19()
+{
+	int begin = clock();
+	int year,sum,daysBefore;
+	sum = 0;
+	daysBefore=365;
+	for (year = 1901; year <= 2000; year++)
+	{
+		sum += SundayBegin(year, &daysBefore);
+	}
+	printf("%d\n", sum);
+	return begin;
+}
+int Problem20()
+{
+	int begin = clock();
+	int num[200] = { 1 ,0};
+	int sum = 0;
+	for (i = 1; i < 101; i++)
+	{
+		mul(num, i);
+	}
+	for (i = 0; i < 200; i++)
+		sum += num[i];
+	printf("%d\n", sum);
+	return begin;
+}
+int SumFractor(int number)
+{
+	int sum = 1;
+	for (int i = 2; i <= sqrt(number); i++)
+		if (number%i == 0)
+			sum += i*i==number? i:(i + number / i);
+	return sum;
+}
+int Problem21()
+{
+	int begin = clock();
+	int sum = 0;
+	int num[10001] = { 0 };
+	for (int i = 1; i < 10001; i++)
+	{
+		num[i] = SumFractor(i);
+	}
+	for (int i = 1; i < 10001; i++)
+	{
+		if (num[i] < 10000 && num[num[i]]==i)
+		{
+			if(num[i]!=i)
+			sum+=num[i];
+		}
+	}
+	printf("%d\n", sum);
+	return begin;
+}
+int min(int a, int b)
+{
+	return a > b ? b : a;
+}
+int comDec(const void *a, const void *b)
+{
+	char *str1 = (char*)a;
+	char *str2 = (char*)b;
+	int len = min(strlen(str1), strlen(str2));
+	for (i = 0; i < len; i++)
+		if (str1[i]!=str2[i])
+			return str1[i]-str2[i];
+	if (strlen(str1) == len)
+		return -1;
+	else
+		return 1;
+}
+int ascValue(char *str)
+{
+	int sum = 0;
+	for (int i = 0; str[i]; i++)
+		sum += (str[i] - 'A' + 1);
+	return sum;
+}
+int Problem22()
+{
+	char name[10000][20] = { '\0' };
+	char buff;
+	int i = 0;
+	int j = 0;
+	int beginFlag = 0;
+	long long sum = 0;
+	FILE* f = fopen("C:\\Users\\Mendel\\Desktop\\names.txt", "r");
+	if (f == NULL)
+	{
+		printf("Failed to open input file.\n");
+		exit(1);
+	}
+	while ((buff = fgetc(f)) != EOF)
+	{
+		if (beginFlag==0&&buff == '\"')
+			beginFlag = 1;
+		else if (beginFlag == 1 && buff == '\"')
+		{
+			beginFlag = 0;
+			i++;
+			j = 0;
+		}
+		else if (beginFlag == 1)
+			name[i][j++] = buff;
+
+	}
+	qsort(name, i, sizeof(name[0]), comDec);
+	for (j = 0; j < i; j++)
+		sum += (j + 1)*ascValue(name[j]);
+	printf("%lld", sum);
+	fclose(f);
+	return 0;
+}
+int Problem23()
+{
+	int begin = clock();
+	long long sum = 0;
+	int num[28124] = { 0 };
+	int j = 0;
+	int flag = 0;
+	for (int i = 1; i < 28124; i++)
+	{
+		//tmp = SumFractor(i);
+		if(SumFractor(i)>i)
+			num[i] =1;
+	}
+	for (int i = 1; i < 28124; i++)
+	{
+		flag = 0;
+		for (j = 12; j < i; j++)
+			if (num[j] && num[i - j])
+			{
+				flag = 1;
+				break;
+			}
+		if (!flag)
+			sum += i;
+	}
+	printf("%d\n", sum);
+	return begin;
+}
+int smallFractorial(int n)
+{
+	int mul=1;
+	for (i = 1; i <= n; i++)
+		mul *= i;
+	return mul;
+}
+int get(int n)
+{
+	static int num[10] = { 0 };
+	int j = 0;
+	for (int i = 0; i < 10;i++)
+	{
+		if (!num[i])
+			j++;
+		if (n == j)
+		{
+			num[i] = 1;
+			return i;
+		}
+	}
+	return 0;
+}
+int Problem24()
+{
+	int i, j, k;
+	int begin = clock();
+	int target = 1000000;
+	int num[10] = { 0 };
+	int tmp = 0;
+	j = 0;
+	k = 9;
+	while (j<10)
+	{
+		tmp= smallFractorial(k);
+		for (i = 0; i < 10; i++)
+		{
+			target -= tmp;
+			if (target <=0)
+				break;
+		}
+		target +=tmp;
+		num[j++] = get(i+1);
+		k--;
+	}
+	for (i = 0; i < 10; i++)
+		printf("%d", num[i]);
+	printf("\n");
+	return begin;
+}
+void equal(int *a, int *b)
+{
+	int len;
+	for (len =999; len >= 0; len--)
+		if (a[len] || b[len])
+			break;
+	for (int i = 0; i <= len; i++)
+		a[i] = b[i];
+}
+void add(int *a, int *b)
+{
+	int len;
+	int tmp;
+	int rest = 0;
+	for (len = 999; len >= 0; len--)
+		if (a[len] || b[len])
+			break;
+	len++;
+	for (int i = 0; i <= len; i++)
+	{
+		tmp = b[i] + a[i] + rest;
+		b[i] = tmp % 10;
+		rest = tmp /10;
+	}
+}
+int Problem25()
+{
+	int begin = clock();
+	int a[1000] = { 1,0 };
+	int b[1000] = { 1,0 };
+	int tmp[1000] = { 0 };
+	int index = 2;
+	while (!b[999])
+	{
+		equal(tmp, b);
+		add(a, b);
+		equal(a, tmp);
+		index++;
+	}
+	printf("%d", index);
+	return begin;
+}
+int getCycle(int n)
+{
+	int i,k;
+	while (n % 2 == 0) n /= 2;
+	while (n % 5 == 0) n /= 5;
+	if (1000 % n == 0)
+		return 0;
+	k = 0;
+	i = 1;
+	do
+	{
+		k++;
+		i = (i * 10) % n;
+	} while (i != 1);
+	return k;
+}
+int Problem26()
+{
+	int begin = clock();
+	int tmp, index;
+	int max = 0;
+	for (int i = 2; i < 1000; i++)
+	{
+		tmp = getCycle(i);
+		if (tmp > max)
+		{
+			max = tmp;
+			index = i;
+		}
+	}
+	printf("%d\t%d\n", index, max);
+	return begin;
+}
+#define LEN 1000
+void PrimeArray(int *a, int n)
+{
+	int tmp;
+	int j = 0;
+	bool arr[1001] = { false };
+	for (int i = 2; i < 1000 && j < 200; i++)
+	{
+		if (!arr[i])
+			a[j++] = i;
+		for (int k = 0; k < j; k++)
+		{
+			tmp = i*a[k];
+			if (tmp > LEN)
+				break;
+			arr[tmp] = true;
+			if (i%a[k] == 0)
+				break;
+		}
+	}
+}
+int Problem27()
+{
+	int prime[200] = { 0 };
+	int begin = clock();
+	int s, b,a,b_m,a_m;//s=1+a+b
+	int max = 0;
+	//create prime array
+	PrimeArray(prime, 200);
+	for (int i = 0; i < 200 && prime[i]; i++)
+	{
+		b = prime[i];
+		for (int j = 0; j < 200 && prime[j]; j++)
+		{
+			a = prime[j] - prime[i] - 1;
+			for (s = 0; s < 1000; s++)
+				if ((s*s + a*s + b)<0||!isprime(s*s + a*s + b))
+					break;
+			if (s > max)
+			{
+				max = s;
+				b_m = b;
+				a_m = a;
+			}
+		}
+	}
+	printf("%d\t%d\t%d\t%d\n", max,a_m,b_m,a_m*b_m);
+	return begin;
+}
+
+int Problem28()
+{
+	int begin = clock();
+    int sum = 1;
+	int a = 1;
+	int b = 2;
+	for (int i =0; i < 500; i++)
+	{
+		printf("%d\t", i + 2);
+		for (int j = 0; j < 4; j++)
+		{
+			a += b;
+			printf("%d ", a);
+			sum += a;
+		}
+		printf("\n");
+		b += 2;
+	}
+	printf("%d\n", sum);
+	return begin;
+}
+int Pow(int x, int y)
+{
+	int res = 1;
+	while (y--)
+	{
+		res *= x;
+	}
+	return res;
+}
+int Problem29()
+{
+	int tmp;
+	int begin = clock();
+	int num[101][101] = { 0 };
+	for(int i=2;i<101;i++)
+		for (int j = 2; j < 101; j++)
+		{
+			for(int k=2;k<=j/2&&k<(i>11?1:7);k++)
+				if (j%k == 0)
+				{
+					tmp = Pow(i, k);
+					if(tmp<101)
+						num[tmp][j/k] = 1;
+				}
+		}
+	tmp = 0;
+	for (int i = 2; i < 101; i++)
+	{
+		for (int j = 2; j < 101; j++)
+		{
+			if (!num[i][j])
+			{
+				tmp++;
+				printf("(%d,%d)\t", i, j);
+			}
+		}
+		printf("\n");
+	}
+	printf("%d\n", tmp);
+	return begin;
+}
+
+int Problem30()
+{
+	int begin = clock();
+	int sum = 0;
+	int tmp = 1;
+	int j;
+	for (int j = 2; j < 360000; j++)
+	{
+		tmp = 0;
+		i = j;
+		while (i)
+		{
+			tmp+=Pow( i % 10,5);
+			i /= 10;
+		}
+		if (j == tmp)
+			sum += j;
+	}
+	printf("%d\n", sum);
+	return begin;
+}
+
+int Problem31()
+{
+	int begin = clock();
+	int coin[8] = { 1,2,5,10,20,50,100,200 };
+	int x, y, z, m, n, l, a;
+	int way = 1;
+	for (a = 0; a < 3; a++)
+		for(l=0;l<5;l++)
+			for(n=0;n<11;n++)
+				for(m=0;m<21;m++)
+					for(z=0;z<41;z++)
+								if (200- 5 * z -10 * m -n * 20 -l * 50 -a * 100>=0)
+								{
+									way+=(200 - 5 * z - 10 * m - n * 20 - l * 50 - a * 100)/2+1;
+								//	break;
+								}
+	printf("%d\n", way);
+	return 0;
+}
+int checkArray(int *num,int len)
+{
+	for (int i = 0; i < len; i++)
+		if (!num[i])
+			return 0;
+	return 1;
+}
+int checkNum(int n,int *num)
+{
+	int j = 0;
+	int tmp=0;
+	while (n)
+	{
+		if (n % 10==0)
+			return 1;
+		tmp = n % 10;
+		if (num[tmp-1])
+			return 1;
+		num[tmp-1] =1;
+		n /= 10;
+	}
+	return 0;
+}
+void copy(int *a, int *b,int len)
+{
+	for (int i = 0; i < len; i++)
+		a[i] = b[i];
+}
+int fractor(int n, int *num)
+{
+	int a[9];
+	for(int i=2;i*i<=n;i++)
+		if (n%i == 0)
+		{
+			copy(a, num,9);
+			if ((!checkNum(i, a)) && (!checkNum(n / i, a)))
+				if (checkArray(a, 9))
+				{
+					printf(" |%d\t\t|%d\t\t|%-12d|\n", n, i, n / i);
+					return n;
+				}
+		}
+	return 0;
+}
+int Problem32()
+{
+	int begin = clock();
+	int num[9] = { 0};
+	int tmp[9] = { 0 };
+	int product=0;
+	printf("\n |product\t|multiplier\t|multiplicand|\n");
+	printf(" |-------------------------------------------|\n");
+	for (int i = 1000; i < 10000; i++)
+	{
+		copy(tmp, num, 9);
+		if (checkNum(i,tmp))
+			continue;
+		product += fractor(i, tmp);
+		
+	}
+	printf(" ---------------------------------------------\n");
+	printf("Sum: %d\n", product);
+	return begin;
+}
+
+
+
