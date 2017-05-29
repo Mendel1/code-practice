@@ -9,3 +9,5 @@ Tips:
 #Some function has several version because I tried to improve it by trying diffrent way.
 
 Some problem I think it make sense for me are introduced in my blog:[Mendel](http://mende.ml/)
+
+Solution 1-50 had been finished.
